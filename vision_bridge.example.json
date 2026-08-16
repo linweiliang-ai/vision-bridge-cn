@@ -1,0 +1,7 @@
+{
+  "baseUrl": "https://open.bigmodel.cn/api/paas/v4",
+  "apiKey": "YOUR_API_KEY_HERE",
+  "model": "glm-4v-flash",
+  "maxTokens": 1024,
+  "proxy": ""
+}

@@ -1,0 +1,19 @@
+# 配置与密钥 —— 永不提交
+vision_bridge.json
+
+# 粘贴/临时图片
+images/
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.gif
+*.bmp
+
+# 日志与系统文件
+*.log
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
