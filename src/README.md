@@ -21,6 +21,12 @@
 3. 激活后：用户 Ctrl+V 粘贴图片 → 草稿出现 `[Image: <路径>]` → 发送 →
    对每个占位符调用一次 `vision_read(path=<路径>)`。
 
+> ⚠️ **重要：包是完整的不可变单元**。每次 `cordis_define` 更新版本时，
+> **必须同时提供 `code.host` 与 `code.client` 两半全文**——只提供一半会整体替换
+> 正在运行的包，把另一半直接停掉（症状：`vision_read` 工具消失，或粘贴报
+> `host.call("vision_save_image") ... is not registered`）。本项目开发者已实际踩过此坑，
+> 更新版本时务必两半一起发。
+
 ## 配置字段
 
 `baseUrl`（OpenAI 兼容端点根地址）/ `apiKey` / `model` / `maxTokens`（GLM-4V-Flash 上限 1024）/
