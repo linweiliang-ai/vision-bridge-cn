@@ -1,8 +1,8 @@
 #!/usr/bin/env sh
 set -e
-# skill 目录：<repo>/skills/vision-bridge/scripts -> 仓库根在上两层
+# skill 目录：<repo>/skills/vision-bridge/scripts -> 仓库根在上三层
 SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
-REPO_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/../.." && pwd)
+REPO_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/../../.." && pwd)
 CLI="$REPO_ROOT/vision-bridge.js"
 if [ ! -f "$CLI" ]; then
     echo '{"code":"NO_RUNTIME","nextSteps":"vision-bridge.js not found under the repo root; keep the skills/vision-bridge layout inside the repository, or run node vision-bridge.js directly with the full path."}' >&2
