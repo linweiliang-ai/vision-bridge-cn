@@ -103,8 +103,9 @@ node vision-bridge.js <图片路径> [--question "问题"] [--out 输出文件]
 
 1. 把 `dsh-plugin/` 目录整个复制到
    `$DSH_HOME\profiles\web\node_modules\vision-bridge-dsh`；
-2. 在 `$DSH_HOME\profiles\web\cordis.patch.yml` 数组末尾追加一行：
-   `- id: vision-bridge-dsh` / `  name: vision-bridge-dsh`；
+2. 在 `$DSH_HOME\profiles\web\cordis.patch.yml` 数组末尾追加 **insert 块**
+   （裸 `- id:` 只会被当作改现有行而报 not found）：
+   `- insert:` / `    - id: vision-bridge-dsh` / `      name: vision-bridge-dsh`；
 3. `node $DSH_HOME\profiles\node_modules\@deepseek-ai\dsh\lib\bin.js --profile web --dump-config`
    校验无误后重启 Harness。
 

@@ -23,12 +23,13 @@
 
    （若 DSH_HOME 不是 `C:\Users\<你>\.dsh`，把 `$env:USERPROFILE\.dsh` 换成你的 DSH_HOME。）
 
-2. **登记插件行**：编辑 `<DSH_HOME>\profiles\web\cordis.patch.yml`，在数组末尾追加：
+2. **登记插件行**：编辑 `<DSH_HOME>\profiles\web\cordis.patch.yml`，在数组末尾追加（注意用 `insert` 块，裸 `- id:` 只会被当作"改现有行"而报 not found）：
 
    ```yaml
    # Vision Bridge 常驻插件（vision_read 工具）
-   - id: vision-bridge-dsh
-     name: vision-bridge-dsh
+   - insert:
+       - id: vision-bridge-dsh
+         name: vision-bridge-dsh
    ```
 
 3. **校验配置**（无需重启即可确认 patch 可组合）：
