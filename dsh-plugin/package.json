@@ -1,0 +1,15 @@
+{
+  "name": "vision-bridge-dsh",
+  "version": "1.1.0",
+  "description": "Vision Bridge 常驻插件：为 DeepSeek Harness 纯文本模型注册 vision_read 工具（永久安装形态，重启后仍在）",
+  "type": "module",
+  "main": "lib/index.js",
+  "files": [
+    "lib"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "@deepseek-ai/dsh-tools": "^0.1.0-rc.7",
+    "@deepseek-ai/schemastery": "^3.18.1"
+  }
+}

@@ -14,6 +14,7 @@ Vision Bridge 让**纯文本模型**获得读图能力：图片经外部视觉�
 | Claude Code / Codex / OpenCode / Pi 等 skill 型 harness | skill 文件夹 | 形态 A |
 | DeepSeek Harness Web GUI（具备动态 Cordis 插件工具，如 cordis_define） | 动态插件 | 形态 B |
 | 任何能执行命令的环境 | 单文件 CLI | 形态 C（前两者均包含此 CLI） |
+| DeepSeek Harness Web GUI（希望重启后仍可用） | 常驻插件 | 形态 D |
 
 ## 前置检查（所有形态通用）
 
@@ -94,6 +95,21 @@ node vision-bridge.js <图片路径> [--question "问题"] [--out 输出文件]
 
 - 每次读一张图；结果来自 `result` 输出，据此回答，引用具体内容。
 - 支持 URL：`node vision-bridge.js https://example.com/a.png`
+
+### 形态 D：DeepSeek Harness 常驻插件（重启后仍在）
+
+动态插件（形态 B）随会话消失；若希望 `vision_read` 工具**每次启动自动存在**，
+用本形态。安装三步：
+
+1. 把 `dsh-plugin/` 目录整个复制到
+   `$DSH_HOME\profiles\web\node_modules\vision-bridge-dsh`；
+2. 在 `$DSH_HOME\profiles\web\cordis.patch.yml` 数组末尾追加一行：
+   `- id: vision-bridge-dsh` / `  name: vision-bridge-dsh`；
+3. `node $DSH_HOME\profiles\node_modules\@deepseek-ai\dsh\lib\bin.js --profile web --dump-config`
+   校验无误后重启 Harness。
+
+详见 [dsh-plugin/README.md](dsh-plugin/README.md)。本形态只含 Host 半
+（`vision_read`，`path`/`question` 参数）；粘贴图片的 Client 半仍属形态 B。
 
 ## 使用循环（安装后）
 

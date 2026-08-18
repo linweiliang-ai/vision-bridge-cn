@@ -32,6 +32,11 @@ node vision-bridge.js 截图.png --question "第 3 行的数字是多少？"   #
 把 [INSTALL.md](INSTALL.md) 和仓库地址交给你的 AI，其余交给它：克隆仓库 → 生成配置 →
 `--doctor` 体检 → 把 skill 装进所在 harness → 遇到图片自动调用，全程无需人工控制。
 
+## 永久安装（DeepSeek Harness）
+
+动态插件随会话消失；需要 `vision_read` 工具**重启后仍在**时，按 `dsh-plugin/README.md`
+安装为常驻插件（profile 一行配置 + 一次放置，之后每次启动自动生效）。
+
 ## 隐私与安全
 
 图片会发送到你配置的第三方视觉引擎；转写文本按不可信输入对待；API key 切勿提交到仓库。

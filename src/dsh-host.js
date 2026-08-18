@@ -12,7 +12,6 @@ const MAX_IMAGE_BYTES = 8 * 1024 * 1024
 const MAX_OUTPUT_BYTES = 4 * 1024 * 1024
 const MAX_B64_CHARS = 16 * 1024 * 1024
 const B64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
-const IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif']
 
 function bytesToBase64(bytes) {
   let out = ''

@@ -12,6 +12,7 @@ Vision Bridge：为纯文本 AI 模型提供外挂视觉的零依赖工具。核
 - `INSTALL.md` — 面向 AI 的自主安装手册（安装类任务的权威入口）
 - `skills/vision-bridge/` — skill 形态：`SKILL.md` 定义触发规则，`scripts/` 是启动器
 - `src/` — DeepSeek Harness 动态插件形态：`dsh-host.js`（vision_read 工具 + 图片落盘 RPC）、`dsh-client.js`（粘贴拦截 + 选图按钮）
+- `dsh-plugin/` — DeepSeek Harness 常驻插件形态（永久安装）：`lib/index.js` 为 canonical ESM 插件，装进 profile 后重启仍在
 - `README.md` / `README.zh-CN.md` — 面向人类与 AI 的总体介绍
 
 ## 开发约定

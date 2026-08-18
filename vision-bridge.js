@@ -19,7 +19,7 @@ const path = require('node:path')
 const os = require('node:os')
 const { spawnSync } = require('node:child_process')
 
-const VERSION = '1.0.0'
+const VERSION = '1.1.0'
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024
 const DEFAULT_MAX_TOKENS = 1024
 const EXT_MIME = {
@@ -43,6 +43,7 @@ function sniffMediaType(bytes) {
   if (bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) return 'image/jpeg'
   if (bytes.length >= 6 && bytes[0] === 0x47 && bytes[1] === 0x49 && bytes[2] === 0x46 && bytes[3] === 0x38) return 'image/gif'
   if (bytes.length >= 12 && bytes[0] === 0x52 && bytes[1] === 0x49 && bytes[2] === 0x46 && bytes[3] === 0x46 && bytes[8] === 0x57 && bytes[9] === 0x45 && bytes[10] === 0x42 && bytes[11] === 0x50) return 'image/webp'
+  if (bytes.length >= 2 && bytes[0] === 0x42 && bytes[1] === 0x4d) return 'image/bmp'
   return undefined
 }
 
@@ -56,11 +57,12 @@ function isUrl(value) {
 }
 
 function parseArgs(argv) {
-  const args = { positional: [], question: '', config: undefined, out: undefined, timeoutMs: 120000, doctor: false, json: false, help: false }
+  const args = { positional: [], question: '', config: undefined, out: undefined, timeoutMs: 120000, doctor: false, json: false, help: false, version: false }
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]
     if (a === '--doctor') args.doctor = true
     else if (a === '--help' || a === '-h') args.help = true
+    else if (a === '--version' || a === '-v') args.version = true
     else if (a === '--json') args.json = true
     else if (a === '--question' || a === '--prompt') args.question = argv[++i] ?? ''
     else if (a === '--config') args.config = argv[++i]
@@ -86,6 +88,7 @@ function helpText() {
     '  --out <文件>        同时把转写文本写入文件',
     '  --timeout <ms>      请求超时（默认 120000）',
     '  --json              以 JSON 输出结果',
+    '  --version           显示版本号',
     '  --help              显示本帮助',
     '',
     '退出码: 0 成功 / 1 配置或输入错误 / 2 视觉引擎 API 错误',
@@ -217,7 +220,7 @@ async function doctor(explicitConfigPath) {
   try {
     if (cfg.proxy && String(cfg.proxy).trim() !== '') {
       const binary = process.platform === 'win32' ? 'curl.exe' : 'curl'
-      const result = spawnSync(binary, ['-sS', '-m', '15', '-o', 'NUL', '-w', '%{http_code}', '-x', String(cfg.proxy).trim(), endpoint], { encoding: 'utf8' })
+      const result = spawnSync(binary, ['-sS', '-m', '15', '-o', os.devNull, '-w', '%{http_code}', '-x', String(cfg.proxy).trim(), endpoint], { encoding: 'utf8' })
       reachable = result.status === 0 && /\d{3}/.test(String(result.stdout || ''))
     } else {
       const response = await fetch(endpoint, { method: 'GET', signal: AbortSignal.timeout(15000) })
@@ -239,7 +242,8 @@ async function runOne(source, args, cfg) {
   const bytes = await readImageBytes(source, cfg, args.timeoutMs)
   if (bytes.length === 0) fail('empty image: ' + source, 1)
   if (bytes.length > MAX_IMAGE_BYTES) fail('image too large: ' + bytes.length + ' bytes (> 8MB)', 1)
-  let mediaType = EXT_MIME[path.extname(source).toLowerCase()]
+  const cleanSource = isUrl(source) ? source.split(/[?#]/)[0] : source
+  let mediaType = EXT_MIME[path.extname(cleanSource).toLowerCase()]
   if (!mediaType) mediaType = sniffMediaType(bytes)
   if (!mediaType) fail('unsupported image format: ' + source + '（支持 PNG/JPEG/WebP/GIF/BMP）', 1)
   const base64 = Buffer.from(bytes).toString('base64')
@@ -271,6 +275,7 @@ async function runOne(source, args, cfg) {
 async function main() {
   const args = parseArgs(process.argv.slice(2))
   if (args.help) { console.log(helpText()); return }
+  if (args.version) { console.log('Vision Bridge v' + VERSION); return }
   if (args.doctor) { await doctor(args.config); return }
   if (args.positional.length === 0) { console.log(helpText()); process.exit(1) }
   const { cfg, error } = loadConfig(args.config)
